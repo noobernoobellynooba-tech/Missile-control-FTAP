@@ -1,0 +1,108 @@
+
+-- CART3R // MISSILE HUD V2.0
+-- LocalScript | Roblox Studio
+
+local Players = game:GetService("Players")
+local UIS = game:GetService("UserInputService")
+
+local player = Players.LocalPlayer
+local gui = Instance.new("ScreenGui")
+gui.Name = "CART3R_V2"
+gui.ResetOnSpawn = false
+gui.Parent = player:WaitForChild("PlayerGui")
+
+local zoom = 1
+local steering = Vector2.zero
+
+local main = Instance.new("Frame")
+main.Size = UDim2.fromOffset(340, 390)
+main.Position = UDim2.new(.5,-170,.5,-195)
+main.BackgroundColor3 = Color3.fromRGB(8,8,12)
+main.BorderSizePixel = 0
+main.Parent = gui
+
+local corner = Instance.new("UICorner")
+corner.CornerRadius = UDim.new(0,12)
+corner.Parent = main
+
+local outline = Instance.new("UIStroke")
+outline.Color = Color3.fromRGB(210,25,48)
+outline.Thickness = 2
+outline.Parent = main
+
+local function makeLabel(parent,text,size,pos)
+    local l = Instance.new("TextLabel")
+    l.Size = size
+    l.Position = pos
+    l.BackgroundTransparency = 1
+    l.Text = text
+    l.TextColor3 = Color3.fromRGB(255,65,80)
+    l.Font = Enum.Font.Code
+    l.TextScaled = true
+    l.Parent = parent
+    return l
+end
+
+local function makeButton(text,pos,callback)
+    local b = Instance.new("TextButton")
+    b.Size = UDim2.fromOffset(48,38)
+    b.Position = pos
+    b.Text = text
+    b.TextColor3 = Color3.new(1,1,1)
+    b.BackgroundColor3 = Color3.fromRGB(125,12,32)
+    b.Font = Enum.Font.Code
+    b.TextScaled = true
+    b.Parent = main
+    Instance.new("UICorner",b).CornerRadius = UDim.new(0,7)
+    b.Activated:Connect(callback)
+    return b
+end
+
+makeLabel(main,"CART3R // M-01",
+    UDim2.new(1,-20,0,38),UDim2.fromOffset(10,5))
+
+local viewport = Instance.new("Frame")
+viewport.Size = UDim2.new(1,-20,0,150)
+viewport.Position = UDim2.fromOffset(10,48)
+viewport.BackgroundColor3 = Color3.fromRGB(19,22,27)
+viewport.Parent = main
+Instance.new("UICorner",viewport).CornerRadius = UDim.new(0,8)
+
+makeLabel(viewport,"FPV CAMERA",
+    UDim2.new(1,0,0,30),UDim2.fromOffset(0,55))
+
+local zoomText = makeLabel(main,"ZOOM 1.0x",
+    UDim2.fromOffset(130,30),UDim2.fromOffset(105,205))
+
+makeButton("-",UDim2.fromOffset(35,200),function()
+    zoom = math.max(.5,zoom-.25)
+    zoomText.Text = "ZOOM "..zoom.."x"
+end)
+
+makeButton("+",UDim2.fromOffset(255,200),function()
+    zoom = math.min(4,zoom+.25)
+    zoomText.Text = "ZOOM "..zoom.."x"
+end)
+
+makeLabel(main,"OBJECT: MANUAL STATUS",
+    UDim2.new(1,-20,0,25),UDim2.fromOffset(10,250))
+
+local joystick = Instance.new("Frame")
+joystick.Size = UDim2.fromOffset(100,100)
+joystick.Position = UDim2.fromOffset(120,280)
+joystick.BackgroundColor3 = Color3.fromRGB(35,15,20)
+joystick.Parent = main
+Instance.new("UICorner",joystick).CornerRadius = UDim.new(1,0)
+
+local stick = Instance.new("Frame")
+stick.Size = UDim2.fromOffset(35,35)
+stick.Position = UDim2.fromOffset(32,32)
+stick.BackgroundColor3 = Color3.fromRGB(225,35,55)
+stick.Parent = joystick
+Instance.new("UICorner",stick).CornerRadius = UDim.new(1,0)
+
+makeButton("CLOSE",UDim2.fromOffset(5,345),function()
+    gui:Destroy()
+end)
+
+print("CART3R HUD V2 loaded")
